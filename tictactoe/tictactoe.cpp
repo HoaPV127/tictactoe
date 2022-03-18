@@ -237,7 +237,6 @@ void TicTacToe::playGame()
 void TicTacToe::playGameTCP()
 {
     string choice;
-    int size, win;
     string mark;
     string name1, name2;
     int sock;
@@ -328,8 +327,6 @@ void TicTacToe::playGameTCP()
     }
     else 
     {      
-
-        int id;
         do
         {
             conn.sockRecv(player2->getSock(), msg, &len);
@@ -387,7 +384,6 @@ void TicTacToe::playGameTCP()
 
 void TicTacToe::getInRankMenu()
 {
-
     rankMenu.clearItems();
     for (int i = 0; i < vPlayers.size(); i++)
     {
@@ -399,6 +395,7 @@ void TicTacToe::getInRankMenu()
         rankMenu.addItem(item.str());
     }
 
+    rankMenu.show();
 }
 
 void TicTacToe::getRemotePlayerInfo(std::shared_ptr<Player> remotePlayer)

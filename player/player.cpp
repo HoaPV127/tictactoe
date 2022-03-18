@@ -65,16 +65,10 @@ void Player::takeAMark(BoardGame &board, UI &ui, Connection *conn)
             str << pos;
             msg[0].id = FILL_MARK;
             memcpy(msg[0].data, str.str().c_str(), str.str().length());
-            int ret = conn->sockSend(this->socket, msg, sizeof(SockMsg) * MSGLEN);
+            conn->sockSend(this->socket, msg, sizeof(SockMsg) * MSGLEN);
         }
         
     }
-
-    
-        
-
-
-    
 
     board.setCell(cell, this->mark);
 }
