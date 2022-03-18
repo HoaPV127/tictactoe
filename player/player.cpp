@@ -32,51 +32,49 @@ void Player::takeAMark(BoardGame &board, UI &ui, Connection *conn)
     SockMsg msg[MSGLEN];
     int len = 0;
     stringstream str;
-    bool valid = false;
     int size = board.getSize();
 
     mark = this->mark == 1 ? "X" : "O";
 
-    do
-    {
-        if (this->type == RemotePlayer) 
-        {   
-            ui.sendMessage(name + string("'s turn: "));
-            do
-            {
-                len = 0;
-                conn->sockRecv(this->socket, msg, &len);
-                str << msg[0].data;
-            } while (msg[0].id != FILL_MARK);
-            
-            pos = stoi(str.str());
-            
-        }
-        else 
-        {   
-            pos = stoi(ui.getPlayerChoice(name + string("'s turn: ")));
-            if (conn != NULL)
-            {   
-                str << pos;
-                msg[0].id = FILL_MARK;
-                memcpy(msg[0].data, str.str().c_str(), str.str().length());
-                int ret = conn->sockSend(this->socket, msg, sizeof(SockMsg) * MSGLEN);
-            }
-        }
-
-        cell.x = pos / board.getSize();
-        cell.y = pos % board.getSize();
+    
+    if (this->type == RemotePlayer) 
+    {   
+        ui.sendMessage(name + string("'s turn: "));
+        do
+        {
+            len = 0;
+            conn->sockRecv(this->socket, msg, &len);
+            str << msg[0].data;
+        } while (msg[0].id != FILL_MARK);
         
-        if ((pos < size * size) && (board.getCell(cell) == 0)) 
-        {
-            valid = true;
-        }
-        else
-        {
-            valid = false;
-        }
+        pos = stoi(str.str());
+        cell.x = pos / size;
+        cell.y = pos % size;
+    }
+    else 
+    {       
+        do {
 
-    } while (!valid);
+            pos = stoi(ui.getPlayerChoice(name + string("'s turn: ")));
+            cell.x = pos / size;
+            cell.y = pos % size;
+        } while (pos >= size * size || board.getCell(cell) != 0);
+
+        if (conn != NULL)
+        {   
+            str << pos;
+            msg[0].id = FILL_MARK;
+            memcpy(msg[0].data, str.str().c_str(), str.str().length());
+            int ret = conn->sockSend(this->socket, msg, sizeof(SockMsg) * MSGLEN);
+        }
+        
+    }
+
+    
+        
+
+
+    
 
     board.setCell(cell, this->mark);
 }
