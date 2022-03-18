@@ -19,11 +19,6 @@ Player::Player()
     int socket = 0;
 }
 
-Player::~Player()
-{
-
-}
-
 void Player::takeAMark(BoardGame &board, UI &ui, Connection *conn)
 {
     int pos;

@@ -96,11 +96,6 @@ int SockServer::sockListen()
     return clisock;
 }
 
-Connection::Connection()
-{
-    
-}
-
 int Connection::sockSend(int sock, void *data, int len)
 {
     return send(sock, data, len, 0);
